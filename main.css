@@ -1,0 +1,23 @@
+body {
+	font-family: sans-serif;
+}
+
+.box {
+	float: left;
+	width: 48%;
+	margin: 0 2px 0 0;
+	padding: 2px;
+	min-height: 500px;
+	border: 1px solid #999;
+	font-family: monospace;
+}
+
+.ce.outline * {
+	border: 1px solid #ddd;
+	background: rgba( 0, 0, 0, 0.04 );
+}
+
+label {
+	display: block;
+	cursor: hand;
+}
