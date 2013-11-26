@@ -22,6 +22,12 @@ $( function () {
 		$( '.ce' ).toggleClass( 'outline', $( this ).prop( 'checked' ) );
 	} );
 
+	$( '.clear' ).click( function () {
+		$( '.html' ).val( '' );
+		$( '.ce' ).html( '' );
+		store();
+	} );
+
 	if ( localStorage ) {
 		html = localStorage.getItem( saveItem );
 		if ( html !== null ) {

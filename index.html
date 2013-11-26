@@ -10,10 +10,13 @@
 	</head>
 	<body>
 		<h1>Content editable sandbox</h1>
-		<label>
-			<input type="checkbox" checked="checked" class="outline" />
-			outline elements
-		</label>
+		<p class="controls">
+			<label>
+				<input type="checkbox" checked="checked" class="outline" />
+				Outline elements
+			</label>
+			<input type="button" value="Clear" class="clear" />
+		</p>
 		<textarea class="html box" placeholder="html"></textarea>
 		<div class="ce box outline" contentEditable="true"></div>
 
