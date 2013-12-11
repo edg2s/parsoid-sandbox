@@ -1,11 +1,74 @@
 $( function () {
 
-	var html, saveItem = 'cehtml';
+	var html,
+		hasLocalStorage = !!window.localStorage,
+		currentHtmlKey = 'current-html', savedHtmlKey = 'saved-html';
 
 	function store() {
-		if ( localStorage ) {
-			localStorage.setItem( saveItem, $( '.ce' ).html() );
+		if ( hasLocalStorage ) {
+			localStorage.setItem( currentHtmlKey, $( '.ce' ).html() );
 		}
+	}
+
+	function update( html ) {
+		$( '.html' ).text( html );
+		$( '.ce' ).html( html );
+	}
+
+	function loadSavedHtml() {
+		return JSON.parse( localStorage.getItem( savedHtmlKey ) || '{}' );
+	}
+
+	function listSavedHtml() {
+		if ( hasLocalStorage ) {
+			var name,
+				count = 0,
+				savedHtml = loadSavedHtml(),
+				$ul = $( '<ul>' );
+
+			for ( name in savedHtml ) {
+				$ul.append(
+					$( '<li>' ).append(
+						'[',
+						$( '<a>' )
+							.attr( 'href', '#' )
+							.text( 'x' )
+							.click( onDeleteClick ),
+						'] ',
+						$( '<a>' )
+							.attr( 'href', '#' )
+							.text( name )
+							.click( onLoadClick ),
+						' ',
+						$( '<code>' ).text( savedHtml[name].substr( 0, 40 ) + '...' )
+					).data( 'name', name )
+				);
+				count++;
+			}
+			if ( count ) {
+				$( '.savedHtml' ).html( $ul );
+			} else {
+				$( '.savedHtml' ).html( '<em>No saved states</em>' );
+			}
+		}
+	}
+
+	function onLoadClick() {
+		var name = $( this ).closest( 'li' ).data( 'name' ),
+			savedHtml = loadSavedHtml();
+
+		if ( savedHtml[name] ) {
+			update( savedHtml[name] );
+		}
+	}
+
+	function onDeleteClick() {
+		var name = $( this ).closest( 'li' ).data( 'name' ),
+			savedHtml = loadSavedHtml();
+
+		delete savedHtml[name];
+		localStorage.setItem( savedHtmlKey, JSON.stringify( savedHtml ) );
+		listSavedHtml();
 	}
 
 	$( '.ce' ).keyup( function () {
@@ -23,17 +86,32 @@ $( function () {
 	} );
 
 	$( '.clear' ).click( function () {
-		$( '.html' ).val( '' );
-		$( '.ce' ).html( '' );
+		update( '' );
 		store();
 	} );
 
-	if ( localStorage ) {
-		html = localStorage.getItem( saveItem );
-		if ( html !== null ) {
-			$( '.html' ).text( html );
-			$( '.ce' ).html( html );
+	$( '.save' ).click( function () {
+		var savedHtml = loadSavedHtml(),
+			name = prompt( 'Name this saved state' );
+
+		if (
+			name !== null &&
+			( savedHtml[name] === undefined || confirm( 'Overwrite existing state with this name?' ) )
+		) {
+			savedHtml[name] = $( '.ce' ).html();
+			localStorage.setItem( savedHtmlKey, JSON.stringify( savedHtml ) );
+			listSavedHtml();
 		}
+	} );
+
+	if ( hasLocalStorage ) {
+		currentHtml = localStorage.getItem( currentHtmlKey );
+		if ( currentHtml !== null ) {
+			update( currentHtml );
+		}
+		listSavedHtml();
+	} else {
+		$( '.save, .saved' ).hide();
 	}
 
 });
