@@ -11,7 +11,7 @@ $( function () {
 	}
 
 	function update( html ) {
-		$( '.html' ).text( html );
+		$( '.html' ).val( html );
 		$( '.ce' ).html( html );
 	}
 
