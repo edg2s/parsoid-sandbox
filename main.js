@@ -15,8 +15,16 @@ $( function () {
 		$( '.ce' ).html( html );
 	}
 
+	function setObject( key, value ) {
+		return localStorage.setItem( key, JSON.stringify( value ) );
+	}
+
+	function getObject( key, value ) {
+		return JSON.parse( localStorage.getItem( key ) || 'null' );
+	}
+
 	function loadSavedHtml() {
-		return JSON.parse( localStorage.getItem( savedHtmlKey ) || '{}' );
+		return getObject( savedHtmlKey ) || {};
 	}
 
 	function listSavedHtml() {
@@ -67,7 +75,7 @@ $( function () {
 			savedHtml = loadSavedHtml();
 
 		delete savedHtml[name];
-		localStorage.setItem( savedHtmlKey, JSON.stringify( savedHtml ) );
+		setObject( savedHtmlKey, savedHtml );
 		listSavedHtml();
 	}
 
@@ -99,7 +107,7 @@ $( function () {
 			( savedHtml[name] === undefined || confirm( 'Overwrite existing state with this name?' ) )
 		) {
 			savedHtml[name] = $( '.ce' ).html();
-			localStorage.setItem( savedHtmlKey, JSON.stringify( savedHtml ) );
+			setObject( savedHtmlKey, savedHtml );
 			listSavedHtml();
 		}
 	} );
