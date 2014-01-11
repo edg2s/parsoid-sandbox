@@ -2,7 +2,8 @@ $( function () {
 
 	var html,
 		hasLocalStorage = !!window.localStorage,
-		currentHtmlKey = 'current-html', savedHtmlKey = 'saved-html';
+		currentHtmlKey = 'current-html', savedHtmlKey = 'saved-html',
+		outlineKey = 'show-outline';
 
 	function store() {
 		if ( hasLocalStorage ) {
@@ -90,8 +91,16 @@ $( function () {
 	} );
 
 	$( '.outline' ).change( function () {
-		$( '.ce' ).toggleClass( 'outline', $( this ).prop( 'checked' ) );
+		var checked = $( this ).prop( 'checked' );
+		$( '.ce' ).toggleClass( 'outline', checked );
+		if ( hasLocalStorage ) {
+			setObject( outlineKey, checked );
+		}
 	} );
+
+	if ( getObject( outlineKey ) !== null ) {
+		$( '.outline' ).prop( 'checked', getObject( outlineKey ) ).trigger( 'change' );
+	}
 
 	$( '.clear' ).click( function () {
 		update( '' );
