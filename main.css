@@ -4,12 +4,25 @@ body {
 
 .box {
 	float: left;
-	width: 48%;
+	width: 49%;
 	margin: 0 2px 0 0;
 	padding: 2px;
 	min-height: 500px;
 	border: 1px solid #999;
 	font-family: monospace;
+	box-sizing: border-box;
+}
+
+.showCss .box {
+	width: 32%;
+}
+
+.css {
+	display: none;
+}
+
+.showCss .css {
+	display: block;
 }
 
 .saved {
@@ -22,8 +35,9 @@ body {
 	border: 1px solid #999;
 }
 
-.ce.outline * {
+.outlined * {
 	border: 1px solid #ddd;
+	background: #ddd;
 	background: rgba( 0, 0, 0, 0.04 );
 }
 

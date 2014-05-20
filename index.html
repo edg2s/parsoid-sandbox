@@ -7,6 +7,7 @@
 		<meta name="description" content="Simple sandbox for playing around with content editable.">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="main.css">
+		<style class="style"></style>
 	</head>
 	<body>
 		<h1>Content editable sandbox</h1>
@@ -15,14 +16,21 @@
 				<input type="checkbox" checked="checked" class="outline" />
 				Outline elements
 			</label>
+			<label>
+				<input type="checkbox" checked="checked" class="editCss" />
+				Edit CSS
+			</label>
 			<input type="button" value="Clear" class="clear" />
 			<input type="button" value="Save" class="save" />
 		</p>
-		<textarea class="html box" placeholder="html"></textarea>
-		<div class="ce box outline" contentEditable="true"></div>
+		<div class="boxes">
+			<textarea class="html box" placeholder="html"></textarea>
+			<textarea class="css box" placeholder="css"></textarea>
+			<div class="ce box outline" contentEditable="true"></div>
+		</div>
 		<div class="saved">
 			<h2>Saved states</h2>
-			<div class="savedHtml"></div>
+			<div class="savedStates"></div>
 		</div>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script>window.jQuery || document.write('<script src="jquery-1.10.2.min.js"><\/script>')</script>
