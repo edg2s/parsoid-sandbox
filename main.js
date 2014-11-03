@@ -3,8 +3,8 @@ $( function () {
 	var currentHtml, currentCss,
 		hasLocalStorage = !!window.localStorage,
 		currentHtmlKey = 'current-html', savedStatesKey = 'saved-states',
-		currentCssKey = 'current-css', savedCssKey = 'saved-css',
-		outlineKey = 'show-outline', editCssKey = 'edit-css';
+		currentCssKey = 'current-css', editCssKey = 'edit-css',
+		outlineKey = 'show-outline';
 
 	function store() {
 		if ( hasLocalStorage ) {
@@ -27,7 +27,7 @@ $( function () {
 		return localStorage.setItem( key, JSON.stringify( value ) );
 	}
 
-	function getObject( key, value ) {
+	function getObject( key ) {
 		return JSON.parse( localStorage.getItem( key ) || 'null' );
 	}
 
@@ -139,15 +139,15 @@ $( function () {
 
 	$( '.save' ).click( function () {
 		var savedStates = loadSavedStates(),
-			name = prompt( 'Name this saved state' );
+			name = window.prompt( 'Name this saved state' );
 
 		if (
 			name !== null &&
-			( savedStates[name] === undefined || confirm( 'Overwrite existing state with this name?' ) )
+			( savedStates[name] === undefined || window.confirm( 'Overwrite existing state with this name?' ) )
 		) {
 			savedStates[name] = {
-				'html': $( '.ce' ).html(),
-				'css': $( '.css' ).val()
+				html: $( '.ce' ).html(),
+				css: $( '.css' ).val()
 			};
 			setObject( savedStatesKey, savedStates );
 			listSavedStates();
