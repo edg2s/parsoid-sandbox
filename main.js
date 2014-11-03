@@ -154,6 +154,31 @@ $( function () {
 		}
 	} );
 
+	$( '.export' ).click( function () {
+		window.prompt( 'Copy the text below',
+			JSON.stringify( {
+				html: $( '.ce' ).html(),
+				css: $( '.css' ).val()
+			} )
+		);
+	} );
+
+	$( '.import' ).click( function () {
+		var data, json = window.prompt( 'Paste the text below' );
+		try {
+			data = JSON.parse( json );
+		} catch ( e ) {
+			window.alert( 'Invalid JSON' );
+			return;
+		}
+		if ( data.html ) {
+			updateHtml( data.html );
+		}
+		if ( data.css ) {
+			updateCss( data.css );
+		}
+	} );
+
 	if ( hasLocalStorage ) {
 		currentHtml = localStorage.getItem( currentHtmlKey );
 		if ( currentHtml !== null ) {
