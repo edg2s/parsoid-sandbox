@@ -165,6 +165,9 @@ $( function () {
 
 	$( '.import' ).click( function () {
 		var data, json = window.prompt( 'Paste the text below' );
+		if ( json === null ) {
+			return;
+		}
 		try {
 			data = JSON.parse( json );
 		} catch ( e ) {
