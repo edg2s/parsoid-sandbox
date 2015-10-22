@@ -2,8 +2,10 @@ $( function () {
 
 	var currentHtml, currentCss,
 		hasLocalStorage = !!window.localStorage,
-		currentHtmlKey = 'current-html', savedStatesKey = 'saved-states',
-		currentCssKey = 'current-css', editCssKey = 'edit-css',
+		currentHtmlKey = 'current-html',
+		savedStatesKey = 'saved-states',
+		currentCssKey = 'current-css',
+		editCssKey = 'edit-css',
 		outlineKey = 'show-outline';
 
 	function store() {
@@ -36,11 +38,12 @@ $( function () {
 	}
 
 	function listSavedStates() {
+		var name, count, savedStates, $ul;
+
 		if ( hasLocalStorage ) {
-			var name,
-				count = 0,
-				savedStates = loadSavedStates(),
-				$ul = $( '<ul>' );
+			count = 0;
+			savedStates = loadSavedStates();
+			$ul = $( '<ul>' );
 
 			for ( name in savedStates ) {
 				$ul.append(
@@ -56,10 +59,10 @@ $( function () {
 							.text( name )
 							.click( onLoadClick ),
 						' ',
-						$( '<code>' ).text( savedStates[name].html.substr( 0, 40 ) + '...' ),
+						$( '<code>' ).text( savedStates[ name ].html.substr( 0, 40 ) + '...' ),
 						' ',
-						savedStates[name].css ?
-							$( '<code>' ).text( savedStates[name].css.substr( 0, 40 ) + '...' ) : ''
+						savedStates[ name ].css ?
+							$( '<code>' ).text( savedStates[ name ].css.substr( 0, 40 ) + '...' ) : ''
 					).data( 'name', name )
 				);
 				count++;
@@ -76,9 +79,9 @@ $( function () {
 		var name = $( this ).closest( 'li' ).data( 'name' ),
 			savedStates = loadSavedStates();
 
-		if ( savedStates[name] ) {
-			updateHtml( savedStates[name].html );
-			updateCss( savedStates[name].css );
+		if ( savedStates[ name ] ) {
+			updateHtml( savedStates[ name ].html );
+			updateCss( savedStates[ name ].css );
 		}
 	}
 
@@ -86,7 +89,7 @@ $( function () {
 		var name = $( this ).closest( 'li' ).data( 'name' ),
 			savedStates = loadSavedStates();
 
-		delete savedStates[name];
+		delete savedStates[ name ];
 		setObject( savedStatesKey, savedStates );
 		listSavedStates();
 	}
@@ -143,9 +146,9 @@ $( function () {
 
 		if (
 			name !== null &&
-			( savedStates[name] === undefined || window.confirm( 'Overwrite existing state with this name?' ) )
+			( savedStates[ name ] === undefined || window.confirm( 'Overwrite existing state with this name?' ) )
 		) {
-			savedStates[name] = {
+			savedStates[ name ] = {
 				html: $( '.ce' ).html(),
 				css: $( '.css' ).val()
 			};
