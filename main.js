@@ -94,12 +94,12 @@ $( function () {
 		listSavedStates();
 	}
 
-	$( '.ce' ).keyup( function () {
+	$( '.ce' ).on( 'input keyup', function () {
 		$( '.html' ).val( $( '.ce' ).html() );
 		store();
 	} );
 
-	$( '.html' ).keyup( function () {
+	$( '.html' ).on( 'input keyup', function () {
 		$( '.ce' ).html( $( '.html' ).val() );
 		store();
 	} );
