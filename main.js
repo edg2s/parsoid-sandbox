@@ -4,7 +4,7 @@ $( function () {
 		parsoidUrl = 'http://parsoid-lb.eqiad.wikimedia.org/enwiki/Main_Page',
 		hasLocalStorage = !!window.localStorage,
 		currentWikitextKey = 'current-wikitext',
-		savedStatesKey = 'saved-states',
+		savedStatesKey = 'parsoid-saved-states',
 		dataParsoidKey = 'data-parsoid';
 
 	function store() {
