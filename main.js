@@ -86,6 +86,7 @@ $( function () {
 		if ( lastRequest ) {
 			lastRequest.abort();
 		}
+		$( '.html' ).addClass( 'loading' );
 		lastRequest = $.ajax( parsoidUrl, {
 			method: 'POST',
 			data: {
@@ -98,6 +99,8 @@ $( function () {
 			}
 			$( '.html' ).val( doc.body.innerHTML );
 			store();
+		} ).always( function () {
+			$( '.html' ).removeClass( 'loading' );
 		} );
 	} );
 
@@ -105,6 +108,7 @@ $( function () {
 		if ( lastRequest ) {
 			lastRequest.abort();
 		}
+		$( '.wikitext' ).addClass( 'loading' );
 		lastRequest = $.ajax( parsoidUrl, {
 			method: 'POST',
 			data: {
@@ -113,6 +117,8 @@ $( function () {
 		} ).done( function ( wikitext ) {
 			$( '.wikitext' ).val( wikitext );
 			store();
+		} ).always( function () {
+			$( '.wikitext' ).removeClass( 'loading' );
 		} );
 	} );
 
