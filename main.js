@@ -1,28 +1,20 @@
 $( function () {
 
-	var currentHtml, currentCss,
+	var currentWikitext, lastRequest,
+		parsoidUrl = 'http://parsoid-lb.eqiad.wikimedia.org/enwiki/Main_Page',
 		hasLocalStorage = !!window.localStorage,
-		currentHtmlKey = 'current-html',
+		currentWikitextKey = 'current-wikitext',
 		savedStatesKey = 'saved-states',
-		currentCssKey = 'current-css',
-		editCssKey = 'edit-css',
-		outlineKey = 'show-outline';
+		dataParsoidKey = 'data-parsoid';
 
 	function store() {
 		if ( hasLocalStorage ) {
-			localStorage.setItem( currentHtmlKey, $( '.ce' ).html() );
-			localStorage.setItem( currentCssKey, $( '.css' ).val() );
+			localStorage.setItem( currentWikitextKey, $( '.wikitext' ).val() );
 		}
 	}
 
-	function updateHtml( html ) {
-		$( '.html' ).val( html );
-		$( '.ce' ).html( html );
-	}
-
-	function updateCss( css ) {
-		$( '.css' ).val( css );
-		$( '.style' ).html( $( '.editCss' ).prop( 'checked' ) ? css : '' );
+	function updateWikitext( wikitext ) {
+		$( '.wikitext' ).val( wikitext ).trigger( 'input' );
 	}
 
 	function setObject( key, value ) {
@@ -59,10 +51,7 @@ $( function () {
 							.text( name )
 							.click( onLoadClick ),
 						' ',
-						$( '<code>' ).text( savedStates[ name ].html.substr( 0, 40 ) + '...' ),
-						' ',
-						savedStates[ name ].css ?
-							$( '<code>' ).text( savedStates[ name ].css.substr( 0, 40 ) + '...' ) : ''
+						$( '<code>' ).text( savedStates[ name ].wikitext.substr( 0, 40 ) + '...' )
 					).data( 'name', name )
 				);
 				count++;
@@ -80,8 +69,7 @@ $( function () {
 			savedStates = loadSavedStates();
 
 		if ( savedStates[ name ] ) {
-			updateHtml( savedStates[ name ].html );
-			updateCss( savedStates[ name ].css );
+			updateWikitext( savedStates[ name ].wikitext );
 		}
 	}
 
@@ -94,49 +82,50 @@ $( function () {
 		listSavedStates();
 	}
 
-	$( '.ce' ).on( 'input keyup', function () {
-		$( '.html' ).val( $( '.ce' ).html() );
-		store();
+	$( '.wikitext' ).on( 'input keyup', function () {
+		if ( lastRequest ) {
+			lastRequest.abort();
+		}
+		lastRequest = $.ajax( parsoidUrl, {
+			method: 'POST',
+			data: {
+				wt: $( '.wikitext' ).val()
+			}
+		} ).done( function ( html ) {
+			var doc = new DOMParser().parseFromString( html, 'text/html' );
+			if ( $( '.data-parsoid' ).prop( 'checked' ) ) {
+				$( doc.body ).find( '[data-parsoid]' ).removeAttr( 'data-parsoid' );
+			}
+			$( '.html' ).val( doc.body.innerHTML );
+			store();
+		} );
 	} );
 
 	$( '.html' ).on( 'input keyup', function () {
-		$( '.ce' ).html( $( '.html' ).val() );
-		store();
+		if ( lastRequest ) {
+			lastRequest.abort();
+		}
+		lastRequest = $.ajax( parsoidUrl, {
+			method: 'POST',
+			data: {
+				html: $( '.html' ).val()
+			}
+		} ).done( function ( wikitext ) {
+			$( '.wikitext' ).val( wikitext );
+			store();
+		} );
 	} );
 
-	$( '.css' ).keyup( function () {
-		$( '.style' ).html( $( '.css' ).val() );
-		store();
-	} );
-
-	$( '.outline' ).change( function () {
+	$( '.data-parsoid' ).change( function () {
 		var checked = $( this ).prop( 'checked' );
-		$( '.ce' ).toggleClass( 'outlined', checked );
+		$( '.wikitext' ).trigger( 'input' );
 		if ( hasLocalStorage ) {
-			setObject( outlineKey, checked );
+			setObject( dataParsoidKey, checked );
 		}
 	} );
-
-	$( '.editCss' ).change( function () {
-		var checked = $( this ).prop( 'checked' );
-		$( '.boxes' ).toggleClass( 'showCss', checked );
-		if ( hasLocalStorage ) {
-			setObject( editCssKey, checked );
-		}
-		updateCss( $( '.css' ).val() );
-	} );
-
-	if ( getObject( outlineKey ) !== null ) {
-		$( '.outline' ).prop( 'checked', getObject( outlineKey ) ).trigger( 'change' );
-	}
-
-	if ( getObject( editCssKey ) !== null ) {
-		$( '.editCss' ).prop( 'checked', getObject( editCssKey ) ).trigger( 'change' );
-	}
 
 	$( '.clear' ).click( function () {
-		updateHtml( '' );
-		updateCss( '' );
+		updateWikitext( '' );
 		store();
 	} );
 
@@ -149,50 +138,17 @@ $( function () {
 			( savedStates[ name ] === undefined || window.confirm( 'Overwrite existing state with this name?' ) )
 		) {
 			savedStates[ name ] = {
-				html: $( '.ce' ).html(),
-				css: $( '.css' ).val()
+				wikitext: $( '.wikitext' ).val()
 			};
 			setObject( savedStatesKey, savedStates );
 			listSavedStates();
 		}
 	} );
 
-	$( '.export' ).click( function () {
-		window.prompt( 'Copy the text below',
-			JSON.stringify( {
-				html: $( '.ce' ).html(),
-				css: $( '.css' ).val()
-			} )
-		);
-	} );
-
-	$( '.import' ).click( function () {
-		var data, json = window.prompt( 'Paste the text below' );
-		if ( json === null ) {
-			return;
-		}
-		try {
-			data = JSON.parse( json );
-		} catch ( e ) {
-			window.alert( 'Invalid JSON' );
-			return;
-		}
-		if ( data.html ) {
-			updateHtml( data.html );
-		}
-		if ( data.css ) {
-			updateCss( data.css );
-		}
-	} );
-
 	if ( hasLocalStorage ) {
-		currentHtml = localStorage.getItem( currentHtmlKey );
-		if ( currentHtml !== null ) {
-			updateHtml( currentHtml );
-		}
-		currentCss = localStorage.getItem( currentCssKey );
-		if ( currentCss !== null ) {
-			updateCss( currentCss );
+		currentWikitext = localStorage.getItem( currentWikitextKey );
+		if ( currentWikitext !== null ) {
+			updateWikitext( currentWikitext );
 		}
 		listSavedStates();
 	} else {

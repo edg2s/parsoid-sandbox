@@ -1,11 +1,10 @@
-ContentEditable sandbox
-=======================
+Parsoid sandbox
+===============
 
-Basic sandbox for playing around with content editable and discovering its crazy behaviour.
+Basic sandbox for playing around with Parsoid and discovering its crazy behaviour.
 
 Features:
-* Live edit raw HTML or ContentEditable output, which update each other as you type
-* Optional HTML outline mode
+* Live edit raw wikitext or HTML output, which update each other as you type
 * State persisted in local storage
 
-Demo: http://edg2s.github.io/content-editable-sandbox/
+Demo: http://edg2s.github.io/parsoid-sandbox/

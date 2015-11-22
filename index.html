@@ -3,44 +3,31 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<title>Content editable sandbox</title>
-		<meta name="description" content="Simple sandbox for playing around with content editable.">
+		<title>Parsoid sandbox</title>
+		<meta name="description" content="Simple sandbox for playing around with Parsoid.">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="main.css">
 		<style class="style"></style>
 	</head>
 	<body>
-		<h1>Content editable sandbox</h1>
+		<h1>Parsoid sandbox</h1>
 		<p class="controls">
 			<label>
-				<input type="checkbox" checked="checked" class="outline" />
-				Outline elements
-			</label>
-			<label>
-				<input type="checkbox" class="editCss" />
-				Edit CSS
+				<input type="checkbox" checked="checked" class="data-parsoid" />
+				Hide data-parsoid
 			</label>
 			<input type="button" value="Clear" class="clear" />
 			<input type="button" value="Save" class="save" />
-			<input type="button" value="Export" class="export" />
-			<input type="button" value="Import" class="import" />
 		</p>
 		<div class="boxes">
+			<textarea class="wikitext box" placeholder="wikitext"></textarea>
 			<textarea class="html box" placeholder="html"></textarea>
-			<textarea class="css box" placeholder="css"></textarea>
-			<div class="ce box outline" contentEditable="true"></div>
 		</div>
 		<div class="saved">
 			<h2>Saved states</h2>
 			<div class="savedStates"></div>
 		</div>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-		<script>
-			if ( !window.jQuery ) {
-				/*jslint evil: true */
-				document.write('<script src="jquery-1.10.2.min.js"><\/script>');
-			}
-		</script>
 		<script src="main.js"></script>
 	</body>
 </html>

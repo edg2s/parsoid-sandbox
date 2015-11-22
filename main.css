@@ -13,18 +13,6 @@ body {
 	box-sizing: border-box;
 }
 
-.showCss .box {
-	width: 32%;
-}
-
-.css {
-	display: none;
-}
-
-.showCss .css {
-	display: block;
-}
-
 .saved {
 	padding-top: 1em;
 	clear: both;
@@ -33,12 +21,6 @@ body {
 .saved code {
 	font-size: 90%;
 	border: 1px solid #999;
-}
-
-.outlined * {
-	border: 1px solid #ddd;
-	background: #ddd;
-	background: rgba( 0, 0, 0, 0.04 );
 }
 
 label, input[type=button] {
