@@ -114,14 +114,17 @@ $( function () {
 		lastRequest = $.ajax( restBaseUri + 'transform/wikitext/to/html', {
 			method: 'POST',
 			data: {
-				wikitext: wikitext
+				wikitext: wikitext,
+				body_only: true
 			}
 		} ).done( function ( html ) {
-			var doc = new DOMParser().parseFromString( html, 'text/html' );
+			var doc;
 			if ( $( '.mw-id' ).prop( 'checked' ) ) {
+				doc = new DOMParser().parseFromString( html, 'text/html' );
 				$( doc.body ).find( '[id^=mw]' ).removeAttr( 'id' );
+				html = doc.body.innerHTML;
 			}
-			$( '.html' ).val( doc.body.innerHTML );
+			$( '.html' ).val( html );
 			store();
 		} ).always( function () {
 			$( '.html' ).removeClass( 'loading' );
