@@ -1,11 +1,11 @@
 $( function () {
 
 	var currentWikitext, lastRequest,
-		parsoidUrl = 'http://parsoid-lb.eqiad.wikimedia.org/enwiki/Main_Page',
+		restBaseUri = 'https://www.mediawiki.org/api/rest_v1/',
 		hasLocalStorage = !!window.localStorage,
 		currentWikitextKey = 'current-wikitext',
 		savedStatesKey = 'parsoid-saved-states',
-		dataParsoidKey = 'data-parsoid';
+		mwIdKey = 'mw-id';
 
 	function store() {
 		if ( hasLocalStorage ) {
@@ -87,15 +87,15 @@ $( function () {
 			lastRequest.abort();
 		}
 		$( '.html' ).addClass( 'loading' );
-		lastRequest = $.ajax( parsoidUrl, {
+		lastRequest = $.ajax( restBaseUri + 'transform/wikitext/to/html', {
 			method: 'POST',
 			data: {
-				wt: $( '.wikitext' ).val()
+				wikitext: $( '.wikitext' ).val()
 			}
 		} ).done( function ( html ) {
 			var doc = new DOMParser().parseFromString( html, 'text/html' );
-			if ( $( '.data-parsoid' ).prop( 'checked' ) ) {
-				$( doc.body ).find( '[data-parsoid]' ).removeAttr( 'data-parsoid' );
+			if ( $( '.mw-id' ).prop( 'checked' ) ) {
+				$( doc.body ).find( '[id^=mw]' ).removeAttr( 'id' );
 			}
 			$( '.html' ).val( doc.body.innerHTML );
 			store();
@@ -109,7 +109,7 @@ $( function () {
 			lastRequest.abort();
 		}
 		$( '.wikitext' ).addClass( 'loading' );
-		lastRequest = $.ajax( parsoidUrl, {
+		lastRequest = $.ajax( restBaseUri + 'transform/html/to/wikitext', {
 			method: 'POST',
 			data: {
 				html: $( '.html' ).val()
@@ -122,11 +122,11 @@ $( function () {
 		} );
 	} );
 
-	$( '.data-parsoid' ).change( function () {
+	$( '.mw-id' ).change( function () {
 		var checked = $( this ).prop( 'checked' );
 		$( '.wikitext' ).trigger( 'input' );
 		if ( hasLocalStorage ) {
-			setObject( dataParsoidKey, checked );
+			setObject( mwIdKey, checked );
 		}
 	} );
 
