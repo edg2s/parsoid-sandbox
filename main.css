@@ -1,5 +1,6 @@
 body {
-	font-family: sans-serif;
+	background: #fff;
+	margin: 8px;
 }
 
 .box {
@@ -11,6 +12,20 @@ body {
 	border: 1px solid #999;
 	font-family: monospace;
 	box-sizing: border-box;
+}
+
+.showDom .box {
+	width: 32%;
+}
+
+.dom {
+	display: none;
+	font-family: sans-serif;
+	padding: 5px;
+}
+
+.showDom .dom {
+	display: block;
 }
 
 .loading {

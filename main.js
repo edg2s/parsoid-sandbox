@@ -5,7 +5,8 @@ $( function () {
 		hasLocalStorage = !!window.localStorage,
 		currentWikitextKey = 'current-wikitext',
 		savedStatesKey = 'parsoid-saved-states',
-		mwIdKey = 'mw-id';
+		mwIdKey = 'mw-id',
+		renderDomKey = 'render-dom';
 
 	function debounce( func, wait, immediate ) {
 		var timeout;
@@ -101,6 +102,12 @@ $( function () {
 		listSavedStates();
 	}
 
+	function updateDom() {
+		if ( $( '.renderDom' ).prop( 'checked' ) ) {
+			$( '.dom' ).html( $( '.html' ).val() );
+		}
+	}
+
 	$( '.wikitext' ).on( 'input keyup', debounce( function () {
 		var wikitext = $( '.wikitext' ).val();
 		if ( wikitext === lastWikitext ) {
@@ -125,6 +132,7 @@ $( function () {
 				html = doc.body.innerHTML;
 			}
 			$( '.html' ).val( html );
+			updateDom();
 			store();
 		} ).always( function () {
 			$( '.html' ).removeClass( 'loading' );
@@ -137,6 +145,7 @@ $( function () {
 			return;
 		}
 		lastHtml = html;
+		updateDom();
 		if ( lastRequest ) {
 			lastRequest.abort();
 		}
@@ -154,6 +163,10 @@ $( function () {
 		} );
 	}, 500 ) );
 
+	$( '.dom' ).on( 'input keyup', function () {
+		$( '.html' ).val( $( '.dom' ).html() ).trigger( 'input' );
+	} );
+
 	$( '.mw-id' ).change( function () {
 		var checked = $( this ).prop( 'checked' );
 		lastWikitext = null;
@@ -163,8 +176,21 @@ $( function () {
 		}
 	} );
 
+	$( '.renderDom' ).change( function () {
+		var checked = $( this ).prop( 'checked' );
+		$( '.boxes' ).toggleClass( 'showDom', checked );
+		if ( hasLocalStorage ) {
+			setObject( renderDomKey, checked );
+		}
+		updateDom( $( '.html' ).val() );
+	} );
+
 	if ( getObject( mwIdKey ) !== null ) {
 		$( '.mw-id' ).prop( 'checked', getObject( mwIdKey ) ).trigger( 'change' );
+	}
+
+	if ( getObject( renderDomKey ) !== null ) {
+		$( '.renderDom' ).prop( 'checked', getObject( renderDomKey ) ).trigger( 'change' );
 	}
 
 	$( '.clear' ).click( function () {
