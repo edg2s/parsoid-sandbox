@@ -163,6 +163,10 @@ $( function () {
 		}
 	} );
 
+	if ( getObject( mwIdKey ) !== null ) {
+		$( '.mw-id' ).prop( 'checked', getObject( mwIdKey ) ).trigger( 'change' );
+	}
+
 	$( '.clear' ).click( function () {
 		updateWikitext( '' );
 		store();
