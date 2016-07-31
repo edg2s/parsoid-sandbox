@@ -1,11 +1,30 @@
 $( function () {
 
-	var currentWikitext, lastRequest,
+	var currentWikitext, lastRequest, lastHtml, lastWikitext,
 		restBaseUri = 'https://www.mediawiki.org/api/rest_v1/',
 		hasLocalStorage = !!window.localStorage,
 		currentWikitextKey = 'current-wikitext',
 		savedStatesKey = 'parsoid-saved-states',
 		mwIdKey = 'mw-id';
+
+	function debounce( func, wait, immediate ) {
+		var timeout;
+		return function () {
+			var context = this,
+				args = arguments,
+				later = function () {
+					timeout = null;
+					if ( !immediate ) {
+						func.apply( context, args );
+					}
+				};
+			if ( immediate && !timeout ) {
+				func.apply( context, args );
+			}
+			clearTimeout( timeout );
+			timeout = setTimeout( later, wait );
+		};
+	}
 
 	function store() {
 		if ( hasLocalStorage ) {
@@ -82,7 +101,12 @@ $( function () {
 		listSavedStates();
 	}
 
-	$( '.wikitext' ).on( 'input keyup', function () {
+	$( '.wikitext' ).on( 'input keyup', debounce( function () {
+		var wikitext = $( '.wikitext' ).val();
+		if ( wikitext === lastWikitext ) {
+			return;
+		}
+		lastWikitext = wikitext;
 		if ( lastRequest ) {
 			lastRequest.abort();
 		}
@@ -90,7 +114,7 @@ $( function () {
 		lastRequest = $.ajax( restBaseUri + 'transform/wikitext/to/html', {
 			method: 'POST',
 			data: {
-				wikitext: $( '.wikitext' ).val()
+				wikitext: wikitext
 			}
 		} ).done( function ( html ) {
 			var doc = new DOMParser().parseFromString( html, 'text/html' );
@@ -102,9 +126,14 @@ $( function () {
 		} ).always( function () {
 			$( '.html' ).removeClass( 'loading' );
 		} );
-	} );
+	}, 500 ) );
 
-	$( '.html' ).on( 'input keyup', function () {
+	$( '.html' ).on( 'input keyup', debounce( function () {
+		var html = $( '.html' ).val();
+		if ( html === lastHtml ) {
+			return;
+		}
+		lastHtml = html;
 		if ( lastRequest ) {
 			lastRequest.abort();
 		}
@@ -112,7 +141,7 @@ $( function () {
 		lastRequest = $.ajax( restBaseUri + 'transform/html/to/wikitext', {
 			method: 'POST',
 			data: {
-				html: $( '.html' ).val()
+				html: html
 			}
 		} ).done( function ( wikitext ) {
 			$( '.wikitext' ).val( wikitext );
@@ -120,10 +149,11 @@ $( function () {
 		} ).always( function () {
 			$( '.wikitext' ).removeClass( 'loading' );
 		} );
-	} );
+	}, 500 ) );
 
 	$( '.mw-id' ).change( function () {
 		var checked = $( this ).prop( 'checked' );
+		lastWikitext = null;
 		$( '.wikitext' ).trigger( 'input' );
 		if ( hasLocalStorage ) {
 			setObject( mwIdKey, checked );
