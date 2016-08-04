@@ -122,7 +122,8 @@ $( function () {
 			method: 'POST',
 			data: {
 				wikitext: wikitext,
-				body_only: true
+				body_only: true,
+				scrub_wikitext: true
 			}
 		} ).done( function ( html ) {
 			var doc;
