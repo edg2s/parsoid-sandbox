@@ -1,10 +1,10 @@
 Parsoid sandbox
 ===============
 
-Basic sandbox for playing around with Parsoid and discovering its crazy behaviour.
+Basic sandbox for playing around with Parsoid.
 
 Features:
-* Live edit raw wikitext or HTML output, which update each other as you type
+* Live edit raw wikitext, HTML or HTML DOM (CE), which update each other as you type
 * State persisted in local storage
 
 Demo: http://edg2s.github.io/parsoid-sandbox/
