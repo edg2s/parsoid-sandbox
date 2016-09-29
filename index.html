@@ -32,7 +32,12 @@
 			<h2>Saved states</h2>
 			<div class="savedStates"></div>
 		</div>
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script>
+			if ( !window.jQuery ) {
+				document.write( '<script src="lib/jquery-1.12.4.min.js"><\/script>' );
+			}
+		</script>
 		<script src="main.js"></script>
 	</body>
 </html>
