@@ -42,7 +42,8 @@ body {
 	border: 1px solid #999;
 }
 
-label, input[type=button] {
+label,
+input[type='button'] {
 	display: inline-block;
 	cursor: pointer;
 	margin-right: 1em;
