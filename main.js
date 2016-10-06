@@ -129,7 +129,12 @@ $( function () {
 			var doc;
 			if ( $( '.mw-id' ).prop( 'checked' ) ) {
 				doc = new DOMParser().parseFromString( html, 'text/html' );
-				$( doc.body ).find( '[id^=mw]' ).removeAttr( 'id' );
+				$( doc.body ).find( '[id^=mw]' ).each( function () {
+					var $this = $( this );
+					if ( $this.attr( 'id' ).match( /^mw[a-zA-Z0-9\-_]{2,6}$/ ) ) {
+						$this.removeAttr( 'id' );
+					}
+				} );
 				html = doc.body.innerHTML;
 			}
 			$( '.html' ).val( html );
