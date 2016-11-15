@@ -122,7 +122,9 @@ $( function () {
 			method: 'POST',
 			data: {
 				wikitext: wikitext,
+				// eslint-disable-next-line camelcase
 				body_only: true,
+				// eslint-disable-next-line camelcase
 				scrub_wikitext: true
 			}
 		} ).done( function ( html ) {
