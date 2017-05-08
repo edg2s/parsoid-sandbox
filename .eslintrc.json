@@ -1,17 +1,7 @@
 {
 	"extends": "wikimedia",
-
-	"ecmaVersion": 5,
 	"env": {
 		"browser": true,
-		"node": true,
 		"jquery": true
-	},
-	"globals": {
-		"RangeFix": false
-	},
-
-	"rules": {
-		"no-use-before-define": 0
 	}
 }
