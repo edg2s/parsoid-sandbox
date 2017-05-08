@@ -64,11 +64,13 @@ $( function () {
 						$( '<a>' )
 							.attr( 'href', '#' )
 							.text( 'x' )
+							// eslint-disable-next-line no-use-before-define
 							.click( onDeleteClick ),
 						'] ',
 						$( '<a>' )
 							.attr( 'href', '#' )
 							.text( name )
+							// eslint-disable-next-line no-use-before-define
 							.click( onLoadClick ),
 						' ',
 						$( '<code>' ).text( savedStates[ name ].wikitext.substr( 0, 40 ) + '...' )
@@ -122,7 +124,9 @@ $( function () {
 			method: 'POST',
 			data: {
 				wikitext: wikitext,
+				// eslint-disable-next-line camelcase
 				body_only: true,
+				// eslint-disable-next-line camelcase
 				scrub_wikitext: true
 			}
 		} ).done( function ( html ) {
