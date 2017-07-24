@@ -1,3 +1,5 @@
+/* eslint-disable no-alert */
+
 $( function () {
 
 	var currentWikitext, lastRequest, lastHtml, lastWikitext,
@@ -210,11 +212,11 @@ $( function () {
 
 	$( '.save' ).click( function () {
 		var savedStates = loadSavedStates(),
-			name = window.prompt( 'Name this saved state' );
+			name = prompt( 'Name this saved state' );
 
 		if (
 			name !== null &&
-			( savedStates[ name ] === undefined || window.confirm( 'Overwrite existing state with this name?' ) )
+			( savedStates[ name ] === undefined || confirm( 'Overwrite existing state with this name?' ) )
 		) {
 			savedStates[ name ] = {
 				wikitext: $( '.wikitext' ).val()
