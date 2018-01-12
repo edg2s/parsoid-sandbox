@@ -40,7 +40,7 @@ $( function () {
 	}
 
 	function setObject( key, value ) {
-		return localStorage.setItem( key, JSON.stringify( value ) );
+		return hasLocalStorage ? localStorage.setItem( key, JSON.stringify( value ) ) : null;
 	}
 
 	function getObject( key ) {
@@ -183,17 +183,13 @@ $( function () {
 		var checked = $( this ).prop( 'checked' );
 		lastWikitext = null;
 		$( '.wikitext' ).trigger( 'input' );
-		if ( hasLocalStorage ) {
-			setObject( mwIdKey, checked );
-		}
+		setObject( mwIdKey, checked );
 	} );
 
 	$( '.renderDom' ).change( function () {
 		var checked = $( this ).prop( 'checked' );
 		$( '.boxes' ).toggleClass( 'showDom', checked );
-		if ( hasLocalStorage ) {
-			setObject( renderDomKey, checked );
-		}
+		setObject( renderDomKey, checked );
 		updateDom( $( '.html' ).val() );
 	} );
 
