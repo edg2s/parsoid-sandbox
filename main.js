@@ -8,6 +8,7 @@ $( function () {
 		currentWikitextKey = 'current-wikitext',
 		savedStatesKey = 'parsoid-saved-states',
 		mwIdKey = 'mw-id',
+		scrubWikitextKey = 'scrub-wikitext',
 		renderDomKey = 'render-dom';
 
 	function debounce( func, wait, immediate ) {
@@ -127,9 +128,7 @@ $( function () {
 			data: {
 				wikitext: wikitext,
 				// eslint-disable-next-line camelcase
-				body_only: true,
-				// eslint-disable-next-line camelcase
-				scrub_wikitext: true
+				body_only: true
 			}
 		} ).done( function ( html ) {
 			var doc;
@@ -165,7 +164,9 @@ $( function () {
 		lastRequest = $.ajax( restBaseUri + 'transform/html/to/wikitext', {
 			method: 'POST',
 			data: {
-				html: html
+				html: html,
+				// eslint-disable-next-line camelcase
+				scrub_wikitext: $( '.scrubWikitext' ).prop( 'checked' )
 			}
 		} ).done( function ( wikitext ) {
 			$( '.wikitext' ).val( wikitext );
@@ -186,6 +187,13 @@ $( function () {
 		setObject( mwIdKey, checked );
 	} );
 
+	$( '.scrubWikitext' ).change( function () {
+		var checked = $( this ).prop( 'checked' );
+		lastHtml = null;
+		$( '.html' ).trigger( 'input' );
+		setObject( scrubWikitextKey, checked );
+	} );
+
 	$( '.renderDom' ).change( function () {
 		var checked = $( this ).prop( 'checked' );
 		$( '.boxes' ).toggleClass( 'showDom', checked );
@@ -195,6 +203,10 @@ $( function () {
 
 	if ( getObject( mwIdKey ) !== null ) {
 		$( '.mw-id' ).prop( 'checked', getObject( mwIdKey ) ).trigger( 'change' );
+	}
+
+	if ( getObject( scrubWikitextKey ) !== null ) {
+		$( '.scrubWikitext' ).prop( 'checked', getObject( scrubWikitextKey ) ).trigger( 'change' );
 	}
 
 	if ( getObject( renderDomKey ) !== null ) {
