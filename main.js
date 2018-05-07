@@ -17,7 +17,7 @@ $( function () {
 		$save = $( '.save' ),
 		currentWikitextKey = 'current-wikitext',
 		savedStatesKey = 'parsoid-saved-states',
-		mwIdKey = 'mw-id',
+		restBaseIdsKey = 'restbase-ids',
 		scrubWikitextKey = 'scrub-wikitext',
 		renderDomKey = 'render-dom',
 		formatHtmlKey = 'format-html';
@@ -204,7 +204,7 @@ $( function () {
 		var checked = $( this ).prop( 'checked' );
 		lastWikitext = null;
 		$wikitext.trigger( 'input' );
-		setObject( mwIdKey, checked );
+		setObject( restBaseIdsKey, checked );
 	} );
 
 	$scrubWikitext.change( function () {
@@ -227,8 +227,8 @@ $( function () {
 		updateHtml( $dom.html() );
 	} );
 
-	if ( getObject( mwIdKey ) !== null ) {
-		$restBaseIds.prop( 'checked', getObject( mwIdKey ) ).trigger( 'change' );
+	if ( getObject( restBaseIdsKey ) !== null ) {
+		$restBaseIds.prop( 'checked', getObject( restBaseIdsKey ) ).trigger( 'change' );
 	}
 
 	if ( getObject( scrubWikitextKey ) !== null ) {
