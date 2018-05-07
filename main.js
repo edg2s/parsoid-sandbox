@@ -16,11 +16,7 @@ $( function () {
 		$clear = $( '.clear' ),
 		$save = $( '.save' ),
 		currentWikitextKey = 'current-wikitext',
-		savedStatesKey = 'parsoid-saved-states',
-		restBaseIdsKey = 'restbase-ids',
-		scrubWikitextKey = 'scrub-wikitext',
-		renderDomKey = 'render-dom',
-		formatHtmlKey = 'format-html';
+		savedStatesKey = 'parsoid-saved-states';
 
 	function debounce( func, wait, immediate ) {
 		var timeout;
@@ -200,48 +196,40 @@ $( function () {
 		$html.trigger( 'input' );
 	} );
 
-	$restBaseIds.change( function () {
-		var checked = $( this ).prop( 'checked' );
+	function persistCheckbox( key, $checkbox ) {
+		var val = getObject( key );
+		$checkbox.on( 'change', function () {
+			var checked = $checkbox.prop( 'checked' );
+			setObject( key, checked );
+		} );
+		if ( val !== null ) {
+			$checkbox.prop( 'checked', val ).trigger( 'change' );
+		}
+	}
+
+	persistCheckbox( 'restbase-ids', $restBaseIds );
+	persistCheckbox( 'scrub-wikitext', $scrubWikitext );
+	persistCheckbox( 'render-dom', $renderDom );
+	persistCheckbox( 'format-html', $formatHtml );
+
+	$restBaseIds.on( 'change', function () {
 		lastWikitext = null;
 		$wikitext.trigger( 'input' );
-		setObject( restBaseIdsKey, checked );
 	} );
 
-	$scrubWikitext.change( function () {
-		var checked = $( this ).prop( 'checked' );
+	$scrubWikitext.on( 'change', function () {
 		lastHtml = null;
 		$html.trigger( 'input' );
-		setObject( scrubWikitextKey, checked );
 	} );
 
-	$renderDom.change( function () {
-		var checked = $( this ).prop( 'checked' );
-		$boxes.toggleClass( 'showDom', checked );
-		setObject( renderDomKey, checked );
+	$renderDom.on( 'change', function () {
+		$boxes.toggleClass( 'showDom', $renderDom.prop( 'checked' ) );
 		updateDom( $html.val() );
 	} );
 
-	$formatHtml.change( function () {
-		var checked = $( this ).prop( 'checked' );
-		setObject( formatHtmlKey, checked );
+	$formatHtml.on( 'change', function () {
 		updateHtml( $dom.html() );
 	} );
-
-	if ( getObject( restBaseIdsKey ) !== null ) {
-		$restBaseIds.prop( 'checked', getObject( restBaseIdsKey ) ).trigger( 'change' );
-	}
-
-	if ( getObject( scrubWikitextKey ) !== null ) {
-		$scrubWikitext.prop( 'checked', getObject( scrubWikitextKey ) ).trigger( 'change' );
-	}
-
-	if ( getObject( renderDomKey ) !== null ) {
-		$renderDom.prop( 'checked', getObject( renderDomKey ) ).trigger( 'change' );
-	}
-
-	if ( getObject( formatHtmlKey ) !== null ) {
-		$formatHtml.prop( 'checked', getObject( formatHtmlKey ) ).trigger( 'change' );
-	}
 
 	$clear.click( function () {
 		updateWikitext( '' );
