@@ -76,13 +76,13 @@ $( function () {
 							.attr( 'href', '#' )
 							.text( 'x' )
 							// eslint-disable-next-line no-use-before-define
-							.click( onDeleteClick ),
+							.on( 'click', onDeleteClick ),
 						'] ',
 						$( '<a>' )
 							.attr( 'href', '#' )
 							.text( name )
 							// eslint-disable-next-line no-use-before-define
-							.click( onLoadClick ),
+							.on( 'click', onLoadClick ),
 						' ',
 						$( '<code>' ).text( savedStates[ name ].wikitext.substr( 0, 40 ) + '...' )
 					).data( 'name', name )
@@ -231,12 +231,12 @@ $( function () {
 		updateHtml( $dom.html() );
 	} );
 
-	$clear.click( function () {
+	$clear.on( 'click', function () {
 		updateWikitext( '' );
 		store();
 	} );
 
-	$save.click( function () {
+	$save.on( 'click', function () {
 		var savedStates = loadSavedStates(),
 			name = prompt( 'Name this saved state' );
 
