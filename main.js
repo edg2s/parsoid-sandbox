@@ -5,6 +5,16 @@ $( function () {
 	var currentWikitext, lastRequest, lastHtml, lastWikitext,
 		restBaseUri = 'https://www.mediawiki.org/api/rest_v1/',
 		hasLocalStorage = !!window.localStorage,
+		$boxes = $( '.boxes' ),
+		$wikitext = $( '.wikitext' ),
+		$dom = $( '.dom' ),
+		$html = $( '.html' ),
+		$restBaseIds = $( '.restBaseIds' ),
+		$scrubWikitext = $( '.scrubWikitext' ),
+		$renderDom = $( '.renderDom' ),
+		$formatHtml = $( '.formatHtml' ),
+		$clear = $( '.clear' ),
+		$save = $( '.save' ),
 		currentWikitextKey = 'current-wikitext',
 		savedStatesKey = 'parsoid-saved-states',
 		mwIdKey = 'mw-id',
@@ -33,12 +43,12 @@ $( function () {
 
 	function store() {
 		if ( hasLocalStorage ) {
-			localStorage.setItem( currentWikitextKey, $( '.wikitext' ).val() );
+			localStorage.setItem( currentWikitextKey, $wikitext.val() );
 		}
 	}
 
 	function updateWikitext( wikitext ) {
-		$( '.wikitext' ).val( wikitext ).trigger( 'input' );
+		$wikitext.val( wikitext ).trigger( 'input' );
 	}
 
 	function setObject( key, value ) {
@@ -54,7 +64,8 @@ $( function () {
 	}
 
 	function listSavedStates() {
-		var name, count, savedStates, $ul;
+		var name, count, savedStates, $ul,
+			$savedStates = $( '.savedStates' );
 
 		if ( hasLocalStorage ) {
 			count = 0;
@@ -83,9 +94,9 @@ $( function () {
 				count++;
 			}
 			if ( count ) {
-				$( '.savedStates' ).html( $ul );
+				$savedStates.html( $ul );
 			} else {
-				$( '.savedStates' ).html( '<em>No saved states</em>' );
+				$savedStates.html( '<em>No saved states</em>' );
 			}
 		}
 	}
@@ -109,20 +120,20 @@ $( function () {
 	}
 
 	function updateDom() {
-		if ( $( '.renderDom' ).prop( 'checked' ) ) {
-			$( '.dom' ).html( $( '.html' ).val() );
+		if ( $renderDom.prop( 'checked' ) ) {
+			$dom.html( $html.val() );
 		}
 	}
 
 	function updateHtml( html ) {
-		$( '.html' ).val(
-			$( '.formatHtml' ).prop( 'checked' ) ?
+		$html.val(
+			$formatHtml.prop( 'checked' ) ?
 				html_beautify( html ) : html
 		);
 	}
 
-	$( '.wikitext' ).on( 'input keyup', debounce( function () {
-		var wikitext = $( '.wikitext' ).val();
+	$wikitext.on( 'input keyup', debounce( function () {
+		var wikitext = $wikitext.val();
 		if ( wikitext === lastWikitext ) {
 			return;
 		}
@@ -130,7 +141,7 @@ $( function () {
 		if ( lastRequest ) {
 			lastRequest.abort();
 		}
-		$( '.html' ).addClass( 'loading' );
+		$html.addClass( 'loading' );
 		lastRequest = $.ajax( restBaseUri + 'transform/wikitext/to/html', {
 			method: 'POST',
 			data: {
@@ -140,7 +151,7 @@ $( function () {
 			}
 		} ).done( function ( html ) {
 			var doc;
-			if ( $( '.mw-id' ).prop( 'checked' ) ) {
+			if ( $restBaseIds.prop( 'checked' ) ) {
 				doc = new DOMParser().parseFromString( html, 'text/html' );
 				$( doc.body ).find( '[id^=mw]' ).each( function () {
 					var $this = $( this );
@@ -154,12 +165,12 @@ $( function () {
 			updateDom();
 			store();
 		} ).always( function () {
-			$( '.html' ).removeClass( 'loading' );
+			$html.removeClass( 'loading' );
 		} );
 	}, 500 ) );
 
-	$( '.html' ).on( 'input keyup', debounce( function () {
-		var html = $( '.html' ).val();
+	$html.on( 'input keyup', debounce( function () {
+		var html = $html.val();
 		if ( html === lastHtml ) {
 			return;
 		}
@@ -168,76 +179,76 @@ $( function () {
 		if ( lastRequest ) {
 			lastRequest.abort();
 		}
-		$( '.wikitext' ).addClass( 'loading' );
+		$wikitext.addClass( 'loading' );
 		lastRequest = $.ajax( restBaseUri + 'transform/html/to/wikitext', {
 			method: 'POST',
 			data: {
 				html: html,
 				// eslint-disable-next-line camelcase
-				scrub_wikitext: $( '.scrubWikitext' ).prop( 'checked' )
+				scrub_wikitext: $scrubWikitext.prop( 'checked' )
 			}
 		} ).done( function ( wikitext ) {
-			$( '.wikitext' ).val( wikitext );
+			$wikitext.val( wikitext );
 			store();
 		} ).always( function () {
-			$( '.wikitext' ).removeClass( 'loading' );
+			$wikitext.removeClass( 'loading' );
 		} );
 	}, 500 ) );
 
-	$( '.dom' ).on( 'input keyup', function () {
-		updateHtml( $( '.dom' ).html() );
-		$( '.html' ).trigger( 'input' );
+	$dom.on( 'input keyup', function () {
+		updateHtml( $dom.html() );
+		$html.trigger( 'input' );
 	} );
 
-	$( '.mw-id' ).change( function () {
+	$restBaseIds.change( function () {
 		var checked = $( this ).prop( 'checked' );
 		lastWikitext = null;
-		$( '.wikitext' ).trigger( 'input' );
+		$wikitext.trigger( 'input' );
 		setObject( mwIdKey, checked );
 	} );
 
-	$( '.scrubWikitext' ).change( function () {
+	$scrubWikitext.change( function () {
 		var checked = $( this ).prop( 'checked' );
 		lastHtml = null;
-		$( '.html' ).trigger( 'input' );
+		$html.trigger( 'input' );
 		setObject( scrubWikitextKey, checked );
 	} );
 
-	$( '.renderDom' ).change( function () {
+	$renderDom.change( function () {
 		var checked = $( this ).prop( 'checked' );
-		$( '.boxes' ).toggleClass( 'showDom', checked );
+		$boxes.toggleClass( 'showDom', checked );
 		setObject( renderDomKey, checked );
-		updateDom( $( '.html' ).val() );
+		updateDom( $html.val() );
 	} );
 
-	$( '.formatHtml' ).change( function () {
+	$formatHtml.change( function () {
 		var checked = $( this ).prop( 'checked' );
 		setObject( formatHtmlKey, checked );
-		updateHtml( $( '.dom' ).html() );
+		updateHtml( $dom.html() );
 	} );
 
 	if ( getObject( mwIdKey ) !== null ) {
-		$( '.mw-id' ).prop( 'checked', getObject( mwIdKey ) ).trigger( 'change' );
+		$restBaseIds.prop( 'checked', getObject( mwIdKey ) ).trigger( 'change' );
 	}
 
 	if ( getObject( scrubWikitextKey ) !== null ) {
-		$( '.scrubWikitext' ).prop( 'checked', getObject( scrubWikitextKey ) ).trigger( 'change' );
+		$scrubWikitext.prop( 'checked', getObject( scrubWikitextKey ) ).trigger( 'change' );
 	}
 
 	if ( getObject( renderDomKey ) !== null ) {
-		$( '.renderDom' ).prop( 'checked', getObject( renderDomKey ) ).trigger( 'change' );
+		$renderDom.prop( 'checked', getObject( renderDomKey ) ).trigger( 'change' );
 	}
 
 	if ( getObject( formatHtmlKey ) !== null ) {
-		$( '.formatHtml' ).prop( 'checked', getObject( formatHtmlKey ) ).trigger( 'change' );
+		$formatHtml.prop( 'checked', getObject( formatHtmlKey ) ).trigger( 'change' );
 	}
 
-	$( '.clear' ).click( function () {
+	$clear.click( function () {
 		updateWikitext( '' );
 		store();
 	} );
 
-	$( '.save' ).click( function () {
+	$save.click( function () {
 		var savedStates = loadSavedStates(),
 			name = prompt( 'Name this saved state' );
 
@@ -246,7 +257,7 @@ $( function () {
 			( savedStates[ name ] === undefined || confirm( 'Overwrite existing state with this name?' ) )
 		) {
 			savedStates[ name ] = {
-				wikitext: $( '.wikitext' ).val()
+				wikitext: $wikitext.val()
 			};
 			setObject( savedStatesKey, savedStates );
 			listSavedStates();
