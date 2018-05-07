@@ -9,7 +9,8 @@ $( function () {
 		savedStatesKey = 'parsoid-saved-states',
 		mwIdKey = 'mw-id',
 		scrubWikitextKey = 'scrub-wikitext',
-		renderDomKey = 'render-dom';
+		renderDomKey = 'render-dom',
+		formatHtmlKey = 'format-html';
 
 	function debounce( func, wait, immediate ) {
 		var timeout;
@@ -113,6 +114,13 @@ $( function () {
 		}
 	}
 
+	function updateHtml( html ) {
+		$( '.html' ).val(
+			$( '.formatHtml' ).prop( 'checked' ) ?
+				html_beautify( html ) : html
+		);
+	}
+
 	$( '.wikitext' ).on( 'input keyup', debounce( function () {
 		var wikitext = $( '.wikitext' ).val();
 		if ( wikitext === lastWikitext ) {
@@ -142,7 +150,7 @@ $( function () {
 				} );
 				html = doc.body.innerHTML;
 			}
-			$( '.html' ).val( html );
+			updateHtml( html );
 			updateDom();
 			store();
 		} ).always( function () {
@@ -177,7 +185,8 @@ $( function () {
 	}, 500 ) );
 
 	$( '.dom' ).on( 'input keyup', function () {
-		$( '.html' ).val( $( '.dom' ).html() ).trigger( 'input' );
+		updateHtml( $( '.dom' ).html() );
+		$( '.html' ).trigger( 'input' );
 	} );
 
 	$( '.mw-id' ).change( function () {
@@ -201,6 +210,12 @@ $( function () {
 		updateDom( $( '.html' ).val() );
 	} );
 
+	$( '.formatHtml' ).change( function () {
+		var checked = $( this ).prop( 'checked' );
+		setObject( formatHtmlKey, checked );
+		updateHtml( $( '.dom' ).html() );
+	} );
+
 	if ( getObject( mwIdKey ) !== null ) {
 		$( '.mw-id' ).prop( 'checked', getObject( mwIdKey ) ).trigger( 'change' );
 	}
@@ -211,6 +226,10 @@ $( function () {
 
 	if ( getObject( renderDomKey ) !== null ) {
 		$( '.renderDom' ).prop( 'checked', getObject( renderDomKey ) ).trigger( 'change' );
+	}
+
+	if ( getObject( formatHtmlKey ) !== null ) {
+		$( '.formatHtml' ).prop( 'checked', getObject( formatHtmlKey ) ).trigger( 'change' );
 	}
 
 	$( '.clear' ).click( function () {

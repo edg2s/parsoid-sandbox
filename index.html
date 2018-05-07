@@ -24,6 +24,10 @@
 				<input type="checkbox" checked="checked" class="renderDom" />
 				Render DOM
 			</label>
+			<label>
+				<input type="checkbox" class="formatHtml" />
+				Format HTML
+			</label>
 			<input type="button" value="Clear" class="clear" />
 			<input type="button" value="Save" class="save" />
 		</p>
@@ -36,12 +40,8 @@
 			<h2>Saved states</h2>
 			<div class="savedStates"></div>
 		</div>
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-		<script>
-			if ( !window.jQuery ) {
-				document.write( '<script src="lib/jquery-3.2.1.min.js"><\/script>' );
-			}
-		</script>
+		<script src="lib/jquery-3.2.1.min.js"></script>
+		<script src="lib/beautify-html.min.js"></script>
 		<script src="main.js"></script>
 	</body>
 </html>
