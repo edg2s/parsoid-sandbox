@@ -225,7 +225,7 @@ $( function () {
 	$renderDom.on( 'change', function () {
 		$boxes.toggleClass( 'showDom', $renderDom.prop( 'checked' ) );
 		updateDom( $html.val() );
-	} );
+	} ).trigger( 'change' );
 
 	$formatHtml.on( 'change', function () {
 		updateHtml( $dom.html() );
