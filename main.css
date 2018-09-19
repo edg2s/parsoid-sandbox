@@ -10,8 +10,12 @@ body {
 	padding: 2px;
 	min-height: 500px;
 	border: 1px solid #999;
-	font-family: monospace;
 	box-sizing: border-box;
+}
+
+.html,
+.wikitext {
+	font-family: monospace;
 }
 
 .showDom .box {
@@ -20,7 +24,6 @@ body {
 
 .dom {
 	display: none;
-	font-family: sans-serif;
 	padding: 5px;
 }
 
