@@ -4,10 +4,14 @@ $( function () {
 
 	var currentWikitext, lastRequest, lastHtml, lastWikitext,
 		restBaseUri = 'https://www.mediawiki.org/api/rest_v1/',
+		mwCSS = '//www.mediawiki.org/w/load.php?modules=mediawiki.legacy.commonPrint,shared|mediawiki.skinning.elements|mediawiki.skinning.content|mediawiki.skinning.interface|skins.vector.styles|site|mediawiki.skinning.content.parsoid|mediawiki.page.gallery.styles|ext.cite.style&only=styles&skin=vector',
 		hasLocalStorage = !!window.localStorage,
 		$boxes = $( '.boxes' ),
 		$wikitext = $( '.wikitext' ),
-		$dom = $( '.dom' ),
+		$domWrapper = $( '.domWrapper' ),
+		$dom = $( '<div>' )
+			.addClass( 'mw-body mw-body-content mediawiki mw-content-ltr mw-parser-output' )
+			.prop( 'contentEditable', 'true' ),
 		$html = $( '.html' ),
 		$restBaseIds = $( '.restBaseIds' ),
 		$scrubWikitext = $( '.scrubWikitext' ),
@@ -127,6 +131,21 @@ $( function () {
 				html_beautify( html ) : html
 		);
 	}
+
+	( function () {
+		var shadow, style;
+		if ( $domWrapper[ 0 ].attachShadow ) {
+			shadow = $domWrapper[ 0 ].attachShadow( { mode: 'open' } );
+			style = shadow.ownerDocument.createElement( 'style' );
+			style.innerHTML = '@import "' + mwCSS + '";\n' +
+				'.mw-body { margin: 0; border: 0; padding: 0; }\n' +
+				':focus { outline: 0; }';
+			shadow.appendChild( style );
+			shadow.appendChild( $dom[ 0 ] );
+		} else {
+			$domWrapper.append( $dom );
+		}
+	}() );
 
 	$wikitext.on( 'input keyup', debounce( function () {
 		var wikitext = $wikitext.val();

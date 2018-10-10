@@ -1,6 +1,9 @@
 body {
-	background: #fff;
-	margin: 8px;
+	font-family: sans-serif;
+}
+
+:focus {
+	outline: 0;
 }
 
 .box {
@@ -22,12 +25,12 @@ body {
 	width: 32%;
 }
 
-.dom {
+.domWrapper {
 	display: none;
 	padding: 5px;
 }
 
-.showDom .dom {
+.showDom .domWrapper {
 	display: block;
 }
 

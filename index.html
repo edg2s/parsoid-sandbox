@@ -6,7 +6,6 @@
 		<title>Parsoid sandbox</title>
 		<meta name="description" content="Simple sandbox for playing around with Parsoid.">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="//www.mediawiki.org/w/load.php?modules=mediawiki.legacy.commonPrint,shared|mediawiki.skinning.elements|mediawiki.skinning.content|mediawiki.skinning.interface|skins.vector.styles|site|mediawiki.skinning.content.parsoid|ext.cite.style&amp;only=styles&amp;skin=vector">
 		<link rel="stylesheet" href="main.css">
 	</head>
 	<body>
@@ -33,7 +32,7 @@
 		</p>
 		<div class="boxes">
 			<textarea class="wikitext box" placeholder="wikitext"></textarea>
-			<div class="dom box mw-body mw-body-content mediawiki mw-content-ltr mw-parser-output" contenteditable="true"></div>
+			<div class="domWrapper box"></div>
 			<textarea class="html box" placeholder="html"></textarea>
 		</div>
 		<div class="saved">
