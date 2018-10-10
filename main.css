@@ -49,7 +49,7 @@ body {
 }
 
 label,
-input[type='button'] {
+input[ type='button' ] {
 	display: inline-block;
 	cursor: pointer;
 	margin-right: 1em;
