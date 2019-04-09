@@ -249,7 +249,7 @@ $( function () {
 	} ).trigger( 'change' );
 
 	$formatHtml.on( 'change', function () {
-		updateHtml( $dom.html() );
+		updateHtml( $html.val() );
 	} );
 
 	$clear.on( 'click', function () {
