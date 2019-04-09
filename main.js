@@ -190,7 +190,9 @@ $( function () {
 			return;
 		}
 		lastHtml = html;
-		updateDom();
+		if ( $dom.html() !== html ) {
+			updateDom();
+		}
 		if ( lastRequest ) {
 			lastRequest.abort();
 		}
