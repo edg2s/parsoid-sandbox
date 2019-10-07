@@ -6,26 +6,26 @@
 
 module.exports = function ( grunt ) {
 	grunt.loadNpmTasks( 'grunt-eslint' );
-	grunt.loadNpmTasks( 'grunt-jsonlint' );
 	grunt.loadNpmTasks( 'grunt-stylelint' );
 
 	grunt.initConfig( {
 		pkg: grunt.file.readJSON( 'package.json' ),
 		eslint: {
+			options: {
+				reportUnusedDisableDirectives: true,
+				extensions: [ '.js', '.json' ],
+				cache: true
+			},
 			dev: [
-				'*.js'
-			]
-		},
-		jsonlint: {
-			dev: [
-				'*.json'
+				'*.{js,json}'
 			]
 		},
 		stylelint: {
 			dev: [
 				'*.css'
 			]
-		},		watch: {
+		},
+		watch: {
 			files: [
 				'.{eslint.json}',
 				'<%= eslint.dev %>'
@@ -34,6 +34,6 @@ module.exports = function ( grunt ) {
 		}
 	} );
 
-	grunt.registerTask( 'lint', [ 'eslint', 'jsonlint', 'stylelint' ] );
+	grunt.registerTask( 'lint', [ 'eslint', 'stylelint' ] );
 	grunt.registerTask( 'default', 'lint' );
 };

@@ -96,7 +96,7 @@ $( function () {
 			if ( count ) {
 				$savedStates.html( $ul );
 			} else {
-				$savedStates.html( '<em>No saved states</em>' );
+				$savedStates.html( $( '<em>' ).text( 'No saved states' ) );
 			}
 		}
 	}
