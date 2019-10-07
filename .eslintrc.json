@@ -1,6 +1,5 @@
 {
 	"extends": [
-		"wikimedia",
 		"wikimedia/client",
 		"wikimedia/jquery"
 	],

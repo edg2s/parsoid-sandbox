@@ -1,4 +1,4 @@
-/* eslint-disable no-alert */
+/* eslint-disable no-alert, no-jquery/no-global-selector */
 
 $( function () {
 
