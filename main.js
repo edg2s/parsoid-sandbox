@@ -2,7 +2,7 @@
 
 $( function () {
 
-	var currentWikitext, lastRequest, lastHtml, lastWikitext,
+	var lastRequest, lastHtml, lastWikitext,
 		restBaseUri = 'https://www.mediawiki.org/api/rest_v1/',
 		mwCSS = '//www.mediawiki.org/w/load.php?modules=mediawiki.legacy.commonPrint,shared|mediawiki.skinning.elements|mediawiki.skinning.content|mediawiki.skinning.interface|skins.vector.styles|site|mediawiki.skinning.content.parsoid|mediawiki.page.gallery.styles|ext.cite.style&only=styles&skin=vector',
 		hasLocalStorage = !!window.localStorage,
@@ -64,15 +64,14 @@ $( function () {
 	}
 
 	function listSavedStates() {
-		var name, count, savedStates, $ul,
-			$savedStates = $( '.savedStates' );
+		var $savedStates = $( '.savedStates' );
 
 		if ( hasLocalStorage ) {
-			count = 0;
-			savedStates = loadSavedStates();
-			$ul = $( '<ul>' );
+			var count = 0;
+			var savedStates = loadSavedStates();
+			var $ul = $( '<ul>' );
 
-			for ( name in savedStates ) {
+			for ( var name in savedStates ) {
 				$ul.append(
 					$( '<li>' ).append(
 						'[',
@@ -133,10 +132,9 @@ $( function () {
 	}
 
 	( function () {
-		var shadow, style;
 		if ( $domWrapper[ 0 ].attachShadow ) {
-			shadow = $domWrapper[ 0 ].attachShadow( { mode: 'open' } );
-			style = shadow.ownerDocument.createElement( 'style' );
+			var shadow = $domWrapper[ 0 ].attachShadow( { mode: 'open' } );
+			var style = shadow.ownerDocument.createElement( 'style' );
 			style.innerHTML = '@import "' + mwCSS + '";\n' +
 				'.mw-body { margin: 0; border: 0; padding: 0; }\n' +
 				':focus { outline: 0; }';
@@ -165,9 +163,8 @@ $( function () {
 				body_only: true
 			}
 		} ).done( function ( html ) {
-			var doc;
 			if ( $restBaseIds.prop( 'checked' ) ) {
-				doc = new DOMParser().parseFromString( html, 'text/html' );
+				var doc = new DOMParser().parseFromString( html, 'text/html' );
 				$( doc.body ).find( '[id^=mw]' ).each( function () {
 					var $this = $( this );
 					if ( $this.attr( 'id' ).match( /^mw[a-zA-Z0-9\-_]{2,6}$/ ) ) {
@@ -274,7 +271,7 @@ $( function () {
 	} );
 
 	if ( hasLocalStorage ) {
-		currentWikitext = localStorage.getItem( currentWikitextKey );
+		var currentWikitext = localStorage.getItem( currentWikitextKey );
 		if ( currentWikitext !== null ) {
 			updateWikitext( currentWikitext );
 		}
