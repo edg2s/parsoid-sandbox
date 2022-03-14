@@ -78,16 +78,14 @@ $( function () {
 						$( '<a>' )
 							.attr( 'href', '#' )
 							.text( 'x' )
-							// eslint-disable-next-line no-use-before-define
 							.on( 'click', onDeleteClick ),
 						'] ',
 						$( '<a>' )
 							.attr( 'href', '#' )
 							.text( name )
-							// eslint-disable-next-line no-use-before-define
 							.on( 'click', onLoadClick ),
 						' ',
-						$( '<code>' ).text( savedStates[ name ].wikitext.substr( 0, 40 ) + '...' )
+						$( '<code>' ).text( savedStates[ name ].wikitext.slice( 0, 40 ) + '...' )
 					).data( 'name', name )
 				);
 				count++;
