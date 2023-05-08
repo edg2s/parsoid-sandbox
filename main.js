@@ -2,10 +2,9 @@
 
 $( function () {
 
-	var lastRequest, lastHtml, lastWikitext,
-		restBaseUri = 'https://www.mediawiki.org/api/rest_v1/',
+	let lastRequest, lastHtml, lastWikitext;
+	const restBaseUri = 'https://www.mediawiki.org/api/rest_v1/',
 		mwCSS = '//www.mediawiki.org/w/load.php?modules=mediawiki.legacy.commonPrint,shared|mediawiki.skinning.elements|mediawiki.skinning.content|mediawiki.skinning.interface|skins.vector.styles|site|mediawiki.skinning.content.parsoid|mediawiki.page.gallery.styles|ext.cite.style&only=styles&skin=vector',
-		hasLocalStorage = !!window.localStorage,
 		$boxes = $( '.boxes' ),
 		$wikitext = $( '.wikitext' ),
 		$domWrapper = $( '.domWrapper' ),
@@ -23,9 +22,9 @@ $( function () {
 		savedStatesKey = 'parsoid-saved-states';
 
 	function debounce( func, wait, immediate ) {
-		var timeout;
+		let timeout;
 		return function () {
-			var context = this,
+			const context = this,
 				args = arguments,
 				later = function () {
 					timeout = null;
@@ -42,9 +41,7 @@ $( function () {
 	}
 
 	function store() {
-		if ( hasLocalStorage ) {
-			localStorage.setItem( currentWikitextKey, $wikitext.val() );
-		}
+		localStorage.setItem( currentWikitextKey, $wikitext.val() );
 	}
 
 	function updateWikitext( wikitext ) {
@@ -52,7 +49,7 @@ $( function () {
 	}
 
 	function setObject( key, value ) {
-		return hasLocalStorage ? localStorage.setItem( key, JSON.stringify( value ) ) : null;
+		return localStorage.setItem( key, JSON.stringify( value ) );
 	}
 
 	function getObject( key ) {
@@ -64,42 +61,40 @@ $( function () {
 	}
 
 	function listSavedStates() {
-		var $savedStates = $( '.savedStates' );
+		const $savedStates = $( '.savedStates' );
 
-		if ( hasLocalStorage ) {
-			var count = 0;
-			var savedStates = loadSavedStates();
-			var $ul = $( '<ul>' );
+		let count = 0;
+		const savedStates = loadSavedStates();
+		const $ul = $( '<ul>' );
 
-			for ( var name in savedStates ) {
-				$ul.append(
-					$( '<li>' ).append(
-						'[',
-						$( '<a>' )
-							.attr( 'href', '#' )
-							.text( 'x' )
-							.on( 'click', onDeleteClick ),
-						'] ',
-						$( '<a>' )
-							.attr( 'href', '#' )
-							.text( name )
-							.on( 'click', onLoadClick ),
-						' ',
-						$( '<code>' ).text( savedStates[ name ].wikitext.slice( 0, 40 ) + '...' )
-					).data( 'name', name )
-				);
-				count++;
-			}
-			if ( count ) {
-				$savedStates.html( $ul );
-			} else {
-				$savedStates.html( $( '<em>' ).text( 'No saved states' ) );
-			}
+		for ( const name in savedStates ) {
+			$ul.append(
+				$( '<li>' ).append(
+					'[',
+					$( '<a>' )
+						.attr( 'href', '#' )
+						.text( 'x' )
+						.on( 'click', onDeleteClick ),
+					'] ',
+					$( '<a>' )
+						.attr( 'href', '#' )
+						.text( name )
+						.on( 'click', onLoadClick ),
+					' ',
+					$( '<code>' ).text( savedStates[ name ].wikitext.slice( 0, 40 ) + '...' )
+				).data( 'name', name )
+			);
+			count++;
+		}
+		if ( count ) {
+			$savedStates.html( $ul );
+		} else {
+			$savedStates.html( $( '<em>' ).text( 'No saved states' ) );
 		}
 	}
 
 	function onLoadClick() {
-		var name = $( this ).closest( 'li' ).data( 'name' ),
+		const name = $( this ).closest( 'li' ).data( 'name' ),
 			savedStates = loadSavedStates();
 
 		if ( savedStates[ name ] ) {
@@ -108,7 +103,7 @@ $( function () {
 	}
 
 	function onDeleteClick() {
-		var name = $( this ).closest( 'li' ).data( 'name' ),
+		const name = $( this ).closest( 'li' ).data( 'name' ),
 			savedStates = loadSavedStates();
 
 		delete savedStates[ name ];
@@ -129,22 +124,16 @@ $( function () {
 		);
 	}
 
-	( function () {
-		if ( $domWrapper[ 0 ].attachShadow ) {
-			var shadow = $domWrapper[ 0 ].attachShadow( { mode: 'open' } );
-			var style = shadow.ownerDocument.createElement( 'style' );
-			style.innerHTML = '@import "' + mwCSS + '";\n' +
-				'.mw-body { margin: 0; border: 0; padding: 0; }\n' +
-				':focus { outline: 0; }';
-			shadow.appendChild( style );
-			shadow.appendChild( $dom[ 0 ] );
-		} else {
-			$domWrapper.append( $dom );
-		}
-	}() );
+	const shadow = $domWrapper[ 0 ].attachShadow( { mode: 'open' } );
+	const style = shadow.ownerDocument.createElement( 'style' );
+	style.innerHTML = '@import "' + mwCSS + '";\n' +
+		'.mw-body { margin: 0; border: 0; padding: 0; }\n' +
+		':focus { outline: 0; }';
+	shadow.appendChild( style );
+	shadow.appendChild( $dom[ 0 ] );
 
 	$wikitext.on( 'input keyup', debounce( function () {
-		var wikitext = $wikitext.val();
+		const wikitext = $wikitext.val();
 		if ( wikitext === lastWikitext ) {
 			return;
 		}
@@ -162,9 +151,9 @@ $( function () {
 			}
 		} ).done( function ( html ) {
 			if ( $restBaseIds.prop( 'checked' ) ) {
-				var doc = new DOMParser().parseFromString( html, 'text/html' );
+				const doc = new DOMParser().parseFromString( html, 'text/html' );
 				$( doc.body ).find( '[id^=mw]' ).each( function () {
-					var $this = $( this );
+					const $this = $( this );
 					if ( $this.attr( 'id' ).match( /^mw[a-zA-Z0-9\-_]{2,6}$/ ) ) {
 						$this.removeAttr( 'id' );
 					}
@@ -180,7 +169,7 @@ $( function () {
 	}, 500 ) );
 
 	$html.on( 'input keyup', debounce( function () {
-		var html = $html.val();
+		const html = $html.val();
 		if ( html === lastHtml ) {
 			return;
 		}
@@ -213,9 +202,9 @@ $( function () {
 	} );
 
 	function persistCheckbox( key, $checkbox ) {
-		var val = getObject( key );
+		const val = getObject( key );
 		$checkbox.on( 'change', function () {
-			var checked = $checkbox.prop( 'checked' );
+			const checked = $checkbox.prop( 'checked' );
 			setObject( key, checked );
 		} );
 		if ( val !== null ) {
@@ -253,7 +242,7 @@ $( function () {
 	} );
 
 	$save.on( 'click', function () {
-		var savedStates = loadSavedStates(),
+		const savedStates = loadSavedStates(),
 			name = prompt( 'Name this saved state' );
 
 		if (
@@ -268,14 +257,10 @@ $( function () {
 		}
 	} );
 
-	if ( hasLocalStorage ) {
-		var currentWikitext = localStorage.getItem( currentWikitextKey );
-		if ( currentWikitext !== null ) {
-			updateWikitext( currentWikitext );
-		}
-		listSavedStates();
-	} else {
-		$( '.save, .saved' ).hide();
+	const currentWikitext = localStorage.getItem( currentWikitextKey );
+	if ( currentWikitext !== null ) {
+		updateWikitext( currentWikitext );
 	}
+	listSavedStates();
 
 } );
