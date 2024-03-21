@@ -13,7 +13,6 @@ $( function () {
 			.prop( 'contentEditable', 'true' ),
 		$html = $( '.html' ),
 		$restBaseIds = $( '.restBaseIds' ),
-		$scrubWikitext = $( '.scrubWikitext' ),
 		$renderDom = $( '.renderDom' ),
 		$formatHtml = $( '.formatHtml' ),
 		$clear = $( '.clear' ),
@@ -184,9 +183,7 @@ $( function () {
 		lastRequest = $.ajax( restBaseUri + 'transform/html/to/wikitext', {
 			method: 'POST',
 			data: {
-				html: html,
-				// eslint-disable-next-line camelcase
-				scrub_wikitext: $scrubWikitext.prop( 'checked' )
+				html: html
 			}
 		} ).done( function ( wikitext ) {
 			$wikitext.val( wikitext );
@@ -213,18 +210,12 @@ $( function () {
 	}
 
 	persistCheckbox( 'restbase-ids', $restBaseIds );
-	persistCheckbox( 'scrub-wikitext', $scrubWikitext );
 	persistCheckbox( 'render-dom', $renderDom );
 	persistCheckbox( 'format-html', $formatHtml );
 
 	$restBaseIds.on( 'change', function () {
 		lastWikitext = null;
 		$wikitext.trigger( 'input' );
-	} );
-
-	$scrubWikitext.on( 'change', function () {
-		lastHtml = null;
-		$html.trigger( 'input' );
 	} );
 
 	$renderDom.on( 'change', function () {
