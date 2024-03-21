@@ -1,6 +1,6 @@
 /* eslint-disable no-alert, no-jquery/no-global-selector */
 
-$( function () {
+$( () => {
 
 	let lastRequest, lastHtml, lastWikitext;
 	const restBaseUri = 'https://www.mediawiki.org/api/rest_v1/',
@@ -22,10 +22,10 @@ $( function () {
 
 	function debounce( func, wait, immediate ) {
 		let timeout;
-		return function () {
+		return () => {
 			const context = this,
 				args = arguments,
-				later = function () {
+				later = () => {
 					timeout = null;
 					if ( !immediate ) {
 						func.apply( context, args );
@@ -133,7 +133,7 @@ $( function () {
 	shadow.appendChild( style );
 	shadow.appendChild( $dom[ 0 ] );
 
-	$wikitext.on( 'input keyup', debounce( function () {
+	$wikitext.on( 'input keyup', debounce( () => {
 		const wikitext = $wikitext.val();
 		if ( wikitext === lastWikitext ) {
 			return;
@@ -150,7 +150,7 @@ $( function () {
 				// eslint-disable-next-line camelcase
 				body_only: true
 			}
-		} ).done( function ( html ) {
+		} ).then( ( html ) => {
 			if ( $restBaseIds.prop( 'checked' ) ) {
 				const doc = new DOMParser().parseFromString( html, 'text/html' );
 				$( doc.body ).find( '[id^=mw]' ).each( function () {
@@ -169,7 +169,7 @@ $( function () {
 		} );
 	}, 500 ) );
 
-	$html.on( 'input keyup', debounce( function () {
+	$html.on( 'input keyup', debounce( () => {
 		const html = $html.val();
 		if ( html === lastHtml ) {
 			return;
@@ -187,22 +187,22 @@ $( function () {
 			data: {
 				html: html
 			}
-		} ).done( function ( wikitext ) {
+		} ).then( ( wikitext ) => {
 			$wikitext.val( wikitext );
 			store();
-		} ).always( function () {
+		} ).always( () => {
 			$wikitext.removeClass( 'loading' );
 		} );
 	}, 500 ) );
 
-	$dom.on( 'input keyup', function () {
+	$dom.on( 'input keyup', () => {
 		updateHtml( $dom.html() );
 		$html.trigger( 'input' );
 	} );
 
 	function persistCheckbox( key, $checkbox ) {
 		const val = getObject( key );
-		$checkbox.on( 'change', function () {
+		$checkbox.on( 'change', () => {
 			const checked = $checkbox.prop( 'checked' );
 			setObject( key, checked );
 		} );
@@ -215,26 +215,26 @@ $( function () {
 	persistCheckbox( 'render-dom', $renderDom );
 	persistCheckbox( 'format-html', $formatHtml );
 
-	$restBaseIds.on( 'change', function () {
+	$restBaseIds.on( 'change', () => {
 		lastWikitext = null;
 		$wikitext.trigger( 'input' );
 	} );
 
-	$renderDom.on( 'change', function () {
+	$renderDom.on( 'change', () => {
 		$boxes.toggleClass( 'showDom', $renderDom.prop( 'checked' ) );
 		updateDom( $html.val() );
 	} ).trigger( 'change' );
 
-	$formatHtml.on( 'change', function () {
+	$formatHtml.on( 'change', () => {
 		updateHtml( $html.val() );
 	} );
 
-	$clear.on( 'click', function () {
+	$clear.on( 'click', () => {
 		updateWikitext( '' );
 		store();
 	} );
 
-	$save.on( 'click', function () {
+	$save.on( 'click', () => {
 		const savedStates = loadSavedStates(),
 			name = prompt( 'Name this saved state' );
 
