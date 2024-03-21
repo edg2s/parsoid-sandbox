@@ -125,9 +125,11 @@ $( function () {
 
 	const shadow = $domWrapper[ 0 ].attachShadow( { mode: 'open' } );
 	const style = shadow.ownerDocument.createElement( 'style' );
-	style.innerHTML = '@import "' + mwCSS + '";\n' +
-		'.mw-body { margin: 0; border: 0; padding: 0; }\n' +
-		':focus { outline: 0; }';
+	style.innerHTML = `
+		@import '${ mwCSS }';
+		.mw-body { margin: 0; border: 0; padding: 0; }
+		:focus { outline: 0; }
+	`;
 	shadow.appendChild( style );
 	shadow.appendChild( $dom[ 0 ] );
 
