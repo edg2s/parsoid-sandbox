@@ -9,7 +9,7 @@ $( function () {
 		$wikitext = $( '.wikitext' ),
 		$domWrapper = $( '.domWrapper' ),
 		$dom = $( '<div>' )
-			.addClass( 'mw-body mw-body-content mediawiki mw-content-ltr mw-parser-output' )
+			.addClass( 'mw-body-content mediawiki mw-content-ltr mw-parser-output' )
 			.prop( 'contentEditable', 'true' ),
 		$html = $( '.html' ),
 		$restBaseIds = $( '.restBaseIds' ),
