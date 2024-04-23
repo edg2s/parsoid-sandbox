@@ -5,5 +5,9 @@
 	],
 	"globals": {
 		"html_beautify": "readonly"
+	},
+	"rules": {
+		"object-shorthand": "error",
+		"prefer-arrow-callback": "error"
 	}
 }

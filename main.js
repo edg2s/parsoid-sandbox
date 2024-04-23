@@ -164,7 +164,7 @@ $( () => {
 			updateHtml( html );
 			updateDom();
 			store();
-		} ).always( function () {
+		} ).always( () => {
 			$html.removeClass( 'loading' );
 		} );
 	}, 500 ) );
