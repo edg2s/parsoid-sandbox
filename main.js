@@ -15,6 +15,7 @@ $( () => {
 		$restBaseIds = $( '.restBaseIds' ),
 		$renderDom = $( '.renderDom' ),
 		$formatHtml = $( '.formatHtml' ),
+		$bodyOnly = $( '.bodyOnly' ),
 		$clear = $( '.clear' ),
 		$save = $( '.save' ),
 		currentWikitextKey = 'current-wikitext',
@@ -148,7 +149,7 @@ $( () => {
 			data: {
 				wikitext: wikitext,
 				// eslint-disable-next-line camelcase
-				body_only: true
+				body_only: $( '.bodyOnly' ).prop( 'checked' ) ? true : undefined
 			}
 		} );
 		// lastRequest is the abortable XHR request
@@ -216,10 +217,11 @@ $( () => {
 	}
 
 	persistCheckbox( 'restbase-ids', $restBaseIds );
+	persistCheckbox( 'body-only', $formatHtml );
 	persistCheckbox( 'render-dom', $renderDom );
 	persistCheckbox( 'format-html', $formatHtml );
 
-	$restBaseIds.on( 'change', () => {
+	$restBaseIds.add( $bodyOnly ).on( 'change', () => {
 		lastWikitext = null;
 		$wikitext.trigger( 'input' );
 	} );
