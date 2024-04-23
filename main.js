@@ -144,13 +144,10 @@ $( () => {
 			lastRequest.abort();
 		}
 		$html.addClass( 'loading' );
-		lastRequest = $.ajax( restBaseUri + 'transform/wikitext/to/html', {
-			method: 'POST',
-			data: {
-				wikitext: wikitext,
-				// eslint-disable-next-line camelcase
-				body_only: $( '.bodyOnly' ).prop( 'checked' ) ? true : undefined
-			}
+		lastRequest = $.post( restBaseUri + 'transform/wikitext/to/html', {
+			wikitext,
+			// eslint-disable-next-line camelcase
+			body_only: $( '.bodyOnly' ).prop( 'checked' ) ? true : undefined
 		} );
 		// lastRequest is the abortable XHR request
 		lastRequest.then( ( html ) => {
@@ -185,12 +182,7 @@ $( () => {
 			lastRequest.abort();
 		}
 		$wikitext.addClass( 'loading' );
-		lastRequest = $.ajax( restBaseUri + 'transform/html/to/wikitext', {
-			method: 'POST',
-			data: {
-				html: html
-			}
-		} );
+		lastRequest = $.post( restBaseUri + 'transform/html/to/wikitext', { html } );
 		// lastRequest is the abortable XHR request
 		lastRequest.then( ( wikitext ) => {
 			$wikitext.val( wikitext );
