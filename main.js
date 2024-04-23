@@ -61,7 +61,7 @@ $( () => {
 	}
 
 	function listSavedStates() {
-		const $savedStates = $( '.savedStates' );
+		const $savedStates = $( '.savedStates' ).empty();
 
 		let count = 0;
 		const savedStates = loadSavedStates();
@@ -87,9 +87,9 @@ $( () => {
 			count++;
 		}
 		if ( count ) {
-			$savedStates.html( $ul );
+			$savedStates.append( $ul );
 		} else {
-			$savedStates.html( $( '<em>' ).text( 'No saved states' ) );
+			$savedStates.append( $( '<em>' ).text( 'No saved states' ) );
 		}
 	}
 
