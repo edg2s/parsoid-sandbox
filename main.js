@@ -150,7 +150,9 @@ $( () => {
 				// eslint-disable-next-line camelcase
 				body_only: true
 			}
-		} ).then( ( html ) => {
+		} );
+		// lastRequest is the abortable XHR request
+		lastRequest.then( ( html ) => {
 			if ( $restBaseIds.prop( 'checked' ) ) {
 				const doc = new DOMParser().parseFromString( html, 'text/html' );
 				$( doc.body ).find( '[id^=mw]' ).each( function () {
@@ -187,7 +189,9 @@ $( () => {
 			data: {
 				html: html
 			}
-		} ).then( ( wikitext ) => {
+		} );
+		// lastRequest is the abortable XHR request
+		lastRequest.then( ( wikitext ) => {
 			$wikitext.val( wikitext );
 			store();
 		} ).always( () => {
